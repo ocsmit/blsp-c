@@ -56,3 +56,7 @@ bin
 
 # log files
 *.log
+
+# General
+old/
+;
