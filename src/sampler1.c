@@ -327,6 +327,9 @@ int main(int argc, char const *argv[]) {
       } // END metropolis hastings for parameter vector
 
       // NOTE: When storing parameters, here is where to do it
+      // printf("%lu %lu ", iter, year);
+      // for (size_t i = 0; i < N_PARAMETER; ++i) printf("%f ", gsl_matrix_get(theta_hat, year, i));
+      // printf("\n");
 
     }   // END year loop
 
@@ -350,7 +353,8 @@ int main(int argc, char const *argv[]) {
 
       // calculate column mean for parameter p
       for (size_t year = 0; year < TS_Data->n_years; ++year) {
-        column_sum += gsl_matrix_get(theta_hat, year, p);
+        double th_p = gsl_matrix_get(theta_hat, year, p);
+        column_sum += th_p;
       }
       column_mean = column_sum / TS_Data->n_years;
 
@@ -374,20 +378,20 @@ int main(int argc, char const *argv[]) {
     // THETA STDDEV ***********************************************************
     // Update the vector storing global stddev for each parameter
     // 1. Calculate SSE
-    //  sse_theta_sd <- colSums(Rfast::eachrow(theta_hat, theta_mn, "-")^2)
-    //
     // 2. Draw new stddev from gamma dist
-    // theta_sd <- 1 / sqrt(rgamma(npar, nyear / 2 + a, sse_theta_sd / 2 + b))
-    // message(theta_sd)
 
     for (size_t p = 0; p < N_PARAMETER; ++p) {
       // 1. SSE for parameter p
       double xi = 0, xj = 0, stddev_sse = 0;
+      double sse_i = 0;
+      double sse_2 = 0;
       for (size_t year = 0; year < TS_Data->n_years; ++year) {
         xi = gsl_matrix_get(theta_hat, year, p);
         xj = gsl_vector_get(theta_mean_view, p); // move this out (future)
-        double sse_i = xi - xj;
-        stddev_sse += sse_i * sse_i;
+        sse_i = xi - xj;
+        sse_2 = gsl_pow_2(sse_i);
+
+        stddev_sse += sse_2;
       }
 
       // 2. Draw new stddev from gamma dist
@@ -408,14 +412,6 @@ int main(int argc, char const *argv[]) {
 
     // GLOBAL STDDEV **********************************************************
     // update overall standard dev (noise)
-    //
-    // this line just splits the theta_hat matrix into parameter vectors
-    //    t1 <- lapply(seq_len(nyear), function(i) theta_hat[i, ])
-    // this line computes the VI updates
-    //    t2 <- unlist(mapply(f, t, t1), F, F)
-    // this line computes the total SSE
-    //    sse_sig <- sum((y_long - t2)^2)
-    //    sigma <- 1 / sqrt(rgamma(1, (tobs) / 2 + a, sse_sig / 2 + b))
     double sse_sim = 0;
     for (size_t year = 0; year < TS_Data->n_years; ++year) {
       // 1. Calculate VI SSE for each year and add to SSE
