@@ -360,7 +360,7 @@ int main(int argc, char const *argv[]) {
 
       // calculate sigma parameter for distribution
       theta_mn_sig =
-          gsl_vector_get(theta_sd_view, p) / sqrtl((num_years / 0.1));
+          gsl_vector_get(theta_sd_view, p) / sqrtl((num_years + 0.1));
 
       // Pull draw
       theta_mean_p = gsl_ran_gaussian(RNG_ptr, theta_mn_sig);
