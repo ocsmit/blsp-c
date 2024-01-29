@@ -397,7 +397,8 @@ int main(int argc, char const *argv[]) {
       gamma_b = stddev_sse / 2.0 + 0.1;
 
       // Draw sample
-      theta_stddev_p = gsl_ran_gamma(RNG_ptr, gamma_a, gamma_b);
+      theta_stddev_p = gsl_ran_gamma(RNG_ptr, gamma_a, 1.0 / gamma_b);
+
 
       // intermediate variable for debugging
       double theta_stddev_p_final = 1 / sqrtl(theta_stddev_p);
@@ -448,7 +449,7 @@ int main(int argc, char const *argv[]) {
     sigma_gamma_a = TS_Data->n_obs / 2.0 + 0.1;
     sigma_gamma_b = sse_sim / 2.0 + 0.1;
 
-    sigma_tmp = gsl_ran_gamma(RNG_ptr, sigma_gamma_a, sigma_gamma_b);
+    sigma_tmp = gsl_ran_gamma(RNG_ptr, sigma_gamma_a, 1 / sigma_gamma_b);
 
     sigma = 1 / sqrtl(sigma_tmp);
 
