@@ -1,5 +1,5 @@
-#ifndef TS_DATA_H_
-#define TS_DATA_H_
+#ifndef BLSP_DATA_H_
+#define BLSP_DATA_H_
 
 #include "common.h"
 
@@ -30,25 +30,27 @@
  *
  */
 
-typedef struct TS_Data {
+
+// Observation
+typedef struct BLSP_Data {
   unsigned int n_years; // Total number of years
   unsigned int n_obs;   // total number of observations
   gsl_vector *obs;      // GSL vector holding signal data
   gsl_vector *doy;      // GLS vector holding DOY for each observation
   gsl_vector *year_idx; // GSL vector holding idx for each year
-} TS_Data_t;
+} BLSP_Data_t;
 
-TS_Data_t *TS_Data_alloc(size_t n_years, size_t n_obs);
-void TS_Data_free(TS_Data_t* TS_Data);
+BLSP_Data_t *BLSP_Data_alloc(size_t n_years, size_t n_obs);
+void BLSP_Data_free(BLSP_Data_t* BLSP_Data);
 
-unsigned int TS_Data_get_year(TS_Data_t *TS_Data, size_t i);
+unsigned int BLSP_Data_get_year(BLSP_Data_t *BLSP_Data, size_t i);
 
-double TS_Data_get_doy(TS_Data_t *TS_Data, size_t i);
-gsl_vector_view TS_Data_get_year_doy(TS_Data_t *TS_Data, size_t year_idx);
+double BLSP_Data_get_doy(BLSP_Data_t *BLSP_Data, size_t i);
+gsl_vector_view BLSP_Data_get_year_doy(BLSP_Data_t *BLSP_Data, size_t year_idx);
 
 
-double TS_Data_get_obs(TS_Data_t *TS_Data, size_t i);
-gsl_vector_view TS_Data_get_year_obs(TS_Data_t *TS_Data, size_t year_idx);
+double BLSP_Data_get_obs(BLSP_Data_t *BLSP_Data, size_t i);
+gsl_vector_view BLSP_Data_get_year_obs(BLSP_Data_t *BLSP_Data, size_t year_idx);
 
 
 #endif // !TS_DATA_H_
