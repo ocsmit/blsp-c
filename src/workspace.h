@@ -1,5 +1,5 @@
-#ifndef BLSP_H_
-#define BLSP_H_
+#ifndef BLSP_WORKSPACE_H_
+#define BLSP_WORKSPACE_H_
 
 #include "common.h"
 
@@ -95,4 +95,4 @@ void blsp_free_workspace(blsp_workspace *w);
  */
 void fill_matrix_by_row(gsl_matrix *m, gsl_vector *x);
 
-#endif
+#endif //! BLSP_WORKSPACE_H_
