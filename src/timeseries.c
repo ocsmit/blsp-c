@@ -37,14 +37,6 @@ TimeSeries_t *TimeSeries_init(size_t n_years, size_t n_obs, gsl_vector *obs,
   TSData->data = obs;
   TSData->time = doy;
 
-  /* gsl_vector *year_idx = gsl_vector_calloc(n_years + 1); */
-  /* for (size_t i = 1; i < n_years + 1; ++i) { */
-  /*   gsl_vector_set(year_idx, i, */
-  /*                  gsl_vector_get(BLSP_Data->year_idx, i - 1) + */
-  /*                      gsl_vector_get(year_idx_vec, i)); */
-  /* } */
-  //BLSP_Data->year_idx = year_idx;
-
   return TSData;
 }
 
