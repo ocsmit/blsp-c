@@ -1,57 +1,72 @@
 #include <R.h>
 #include <Rdefines.h>
 #include <Rinternals.h>
+#include <stdio.h>
 
+#include "blsp_r.h"
 
 #include "../../src/blsp.h"
-#include "../../src/blsp_data.h"
-#include "../../src/sampler.h"
+#include "../../src/timeseries.h"
+#include "../../src/workspace.h"
+#include "R_ext/Print.h"
 
-SEXP generate_data(SEXP data_vector, SEXP doy_vector, SEXP year_idx_vector) {
 
+SEXP run_blsp(SEXP data_vector, SEXP doy_vector, SEXP year_idx_vector,
+              SEXP init_theta_mu, SEXP init_theta_sd, SEXP iterations,
+              SEXP burn) {
 
-  int n_obs = length(data_vector);
-  int n_years = length(year_idx_vector);
-
+  int nobs = length(data_vector);
+  int nyrs = length(year_idx_vector) - 1; // yr idx vector is + 1
+  int niter = asInteger(iterations);
+  int nburn = asInteger(burn);
 
   double *data_vec = REAL(data_vector);
   double *doy_vec = REAL(doy_vector);
-  int *year_idx_vec = INTEGER(year_idx_vector);
+  double *year_idx_vec = REAL(year_idx_vector);
+  double *theta_mu = REAL(init_theta_mu);
+  double *theta_sd = REAL(init_theta_sd);
 
   SEXP theta_matrix;
-  PROTECT(theta_matrix = Rf_allocMatrix(REALSXP, n_years, 7));
+  PROTECT(theta_matrix = Rf_allocVector(REALSXP, nyrs * niter * 9));
 
-  BLSP_Data_t *BLSP_Data = BLSP_Data_alloc(n_years, n_obs);
+  // NOTE: The following allocates memory for the timeseries to make sure that
+  // we have enough memory for it to fit, but I could instead initialize it by
+  // assigning the vector views since we know that the data already fits in
+  // memory since we passing it from R
+  TimeSeries_t *X = TimeSeries_alloc(nyrs, nobs);
 
-  gsl_vector_view pp = gsl_vector_view_array(data_vec, n_obs);
-  BLSP_Data->obs = &pp.vector;
+  gsl_vector_view data_view = gsl_vector_view_array(data_vec, nobs);
+  gsl_vector_memcpy(X->data, &data_view.vector);
 
-  gsl_vector_view pv = gsl_vector_view_array(doy_vec, n_obs);
-  BLSP_Data->doy = &pv.vector;
+  gsl_vector_view doy_view = gsl_vector_view_array(doy_vec, nobs);
+  gsl_vector_memcpy(X->time, &doy_view.vector);
 
-  for (size_t i = 1; i < n_years + 1; ++i) {
-    gsl_vector_set(BLSP_Data->year_idx, i,
-		   gsl_vector_get(BLSP_Data->year_idx, i - 1) +
-		       year_idx_vec[i - 1]);
+  gsl_vector_view idx_view = gsl_vector_view_array(year_idx_vec, nyrs + 1);
+  gsl_vector_memcpy(X->tidx, &idx_view.vector);
+
+  // This instead uses pointers to the underlying memory passed from R
+  /// TimeSeries_t *Xi = TimeSeries_init(nyrs, nobs, &data_view.vector,
+  /// &doy_view.vector, &yr_idx_view.vector);
+
+  blsp_workspace *w = blsp_workspace_sampler_alloc(nobs, nyrs, nburn, niter, 7);
+
+  gsl_vector_view theta_mu_view = gsl_vector_view_array(theta_mu, 7);
+  gsl_vector_view theta_sd_view = gsl_vector_view_array(theta_sd, 7);
+  workspace_init_thetas(&theta_mu_view.vector, &theta_sd_view.vector, w);
+
+  int status = blsp_sampler(X, &theta_mu_view.vector, &theta_sd_view.vector, w);
+
+  // TODO: memcpy instead of iteration
+  for (size_t ii = 0; ii < (nyrs * niter * 9); ++ii) {
+    REAL(theta_matrix)[ii] = w->parameter_track->data[ii];
   }
 
+  // Clean up
+  TimeSeries_free(X);
+  blsp_free_workspace(w);
 
-  double theta_mean[7] = {-2.030660, 0.9576184,   119.2568116,
-				    8.7140161, 291.0681806, 9.9803594,
-				    -6.6876395};
+  // Pop R memory stack
+  UNPROTECT(1); // -> theta_matrix
 
-  double theta_sd[7] = {0.03324139, 0.02499047, 0.46365685,
-				  0.35526145, 0.75144906, 0.55121990,
-				  0.09682220};
-
-  gsl_matrix* theta = blsp_sampler(BLSP_Data, theta_mean, theta_sd, 0.8, 7000, 2000);
-
-  for (int i = 0; i < n_years; i++) {
-    for (int p = 0; p < 7; p++) {
-      REAL(theta_matrix)[i + n_years*p] = gsl_matrix_get(theta, i, p);
-    }
-  }
-
-  UNPROTECT(1);
   return theta_matrix;
 }

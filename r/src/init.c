@@ -5,9 +5,8 @@
 #include "blsp_r.h"
 
 
-
 static const R_CallMethodDef CallEntries[] = {
-  {"generate_data", (DL_FUNC) &generate_data, 3},
+  {"run_blsp", (DL_FUNC) &run_blsp, 7},
   {NULL, NULL, 0}
 };
 
