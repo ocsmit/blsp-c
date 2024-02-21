@@ -1,6 +1,10 @@
 #ifndef BLSP_MATH_H_
 #define BLSP_MATH_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "common.h"
 
 #define M_LN_SQRT_2PI 0.918938533204672741780329736406
@@ -20,5 +24,11 @@ double draw_ran_gaussian(gsl_rng *RNG_ptr, double mean, double sttdev);
 
 double vi_log_likelihood(gsl_vector *vi_vector, gsl_vector *doy_vector,
 			 gsl_vector *param_vector, size_t size, double sigma);
+
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif

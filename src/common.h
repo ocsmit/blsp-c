@@ -1,6 +1,10 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // stdlib headers
 #include <stdbool.h>
 #include <stddef.h>
@@ -23,10 +27,16 @@
 #include <gsl/gsl_sf_exp.h>
 #include <gsl/gsl_sf_log.h>
 #include <gsl/gsl_statistics.h>
+#include <gsl/gsl_rstat.h>
 #include <gsl/gsl_vector.h>
 
-// General logger
 
+#define PARAMETER_COUNT 7
+#define BURN_STEPS 50
+
+#define RETURN_IF_NULL(x) if (!x) { return ; }
+
+// General logger
 #ifdef DEBUG
 #define plog(format, ...) ( {  \
   fprintf(stderr, "\033[1;34m[plog]\033[0m " format " \033[2m(%s %d)\033[0m\n", \
@@ -43,6 +53,9 @@
 #define perrlog(format, ...)
 #endif
 
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif // !COMMON_H_

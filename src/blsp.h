@@ -1,23 +1,23 @@
-#ifndef BLSP_H_
-#define BLSP_H_
-#include "common.h"
+#ifndef SAMPLER_H_
+#define SAMPLER_H_
 
-typedef struct BLSP_Model {
-  gsl_vector *theta_mean_vector;
-  gsl_vector *theta_stddev_vector;
+#include "timeseries.h"
+#include "workspace.h"
 
-  gsl_matrix *theta_hat_matrix;
 
-  gsl_vector *global_log_likelihood_vector;
-  gsl_matrix *attempts_matrix;
-  gsl_matrix *acceptence_matrix;
-
-  gsl_matrix *metropolis_hastings_matrix;
-
-} BLSP_Model_t;
-
-BLSP_Model_t *BLSP_Model_alloc(size_t year_cnt, size_t obs_cnt,
-			       size_t parameter_cnt);
-
+/**
+ * @brief      BLSP Algorithm
+ *
+ * @details    Runs MCMC sampler for BLSP
+ *
+ * @param      X          TimeSeries_t
+ * @param      theta_mu   mean parameter values to initialize the parameters for each year
+ * @param      theta_sd   standard deviation parameter values to initialize the parameters
+ * @param      w          workspace
+ *
+ * @return     int
+ */
+int blsp_sampler(TimeSeries_t *X, const gsl_vector *theta_mu,
+                 const gsl_vector *theta_sd, blsp_workspace *w);
 
 #endif

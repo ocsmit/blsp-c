@@ -18,13 +18,13 @@ double vi_double_logistic(double doy, gsl_vector *parameter_vector) {
   term1 = gsl_vector_get(parameter_vector, 1) - m7_l * doy;
 
   gsl_sf_exp_e10_e((gsl_vector_get(parameter_vector, 2) - doy) /
-		       gsl_vector_get(parameter_vector, 3),
-		   &term2_exp);
+                       gsl_vector_get(parameter_vector, 3),
+                   &term2_exp);
   term2 = (1 / (1 + term2_exp.val));
 
   gsl_sf_exp_e10_e((gsl_vector_get(parameter_vector, 4) - doy) /
-		       gsl_vector_get(parameter_vector, 5),
-		   &term3_exp);
+                       gsl_vector_get(parameter_vector, 5),
+                   &term3_exp);
 
   term3 = (1 / (1 + term3_exp.val));
 
@@ -42,11 +42,10 @@ double log_norm(double x, double mu, double sigma) {
   return -(M_LN_SQRT_2PI + 0.5 * xx * xx + gsl_sf_log(sigma));
 }
 
-
 double log_likelihood_ratio(double candidate_value,
-			    double candidate_log_likelihood, double mean_local,
-			    double current_log_likelihood, double mean_global,
-			    double stddev_global) {
+                            double candidate_log_likelihood, double mean_local,
+                            double current_log_likelihood, double mean_global,
+                            double stddev_global) {
 
   // Compute values to compute accetence ratio
   double log_1 = log_norm(candidate_value, mean_global, stddev_global);
@@ -61,14 +60,13 @@ double draw_ran_gaussian(gsl_rng *RNG_ptr, double mean, double sttdev) {
 }
 
 double vi_log_likelihood(gsl_vector *vi_vector, gsl_vector *doy_vector,
-			 gsl_vector *param_vector, size_t size, double sigma) {
-  double final_likelihood = 0, A_i, B_i;
+                         gsl_vector *param_vector, size_t size, double sigma) {
+
+  double final_likelihood = 0;
   for (size_t i = 0; i < size; ++i) {
-    A_i = gsl_vector_get(vi_vector, i);
-    B_i = gsl_vector_get(doy_vector, i);
     final_likelihood += log_norm(
-	gsl_vector_get(vi_vector, i),
-	vi_double_logistic(gsl_vector_get(doy_vector, i), param_vector), sigma);
+        gsl_vector_get(vi_vector, i),
+        vi_double_logistic(gsl_vector_get(doy_vector, i), param_vector), sigma);
   }
   return final_likelihood;
 }
