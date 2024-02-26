@@ -10,6 +10,12 @@
 #include "../../src/workspace.h"
 #include "R_ext/Print.h"
 
+#define GSL_TO_REALSXP(dst, src, size)                                         \
+  memcpy(REAL(dst), src, sizeof(double) * size);
+
+#define GSLVEC_TO_REALSXP(dst, src) GSL_TO_REALSXP(dst, src->data, src->size)
+#define GSLMAT_TO_REALSXP(dst, src)                                            \
+  GSL_TO_REALSXP(dst, src->data, src->size1 * src->size2)
 
 SEXP run_blsp(SEXP data_vector, SEXP doy_vector, SEXP year_idx_vector,
               SEXP init_theta_mu, SEXP init_theta_sd, SEXP iterations,
@@ -56,10 +62,8 @@ SEXP run_blsp(SEXP data_vector, SEXP doy_vector, SEXP year_idx_vector,
 
   int status = blsp_sampler(X, &theta_mu_view.vector, &theta_sd_view.vector, w);
 
-  // TODO: memcpy instead of iteration
-  for (size_t ii = 0; ii < (nyrs * niter * 9); ++ii) {
-    REAL(theta_matrix)[ii] = w->parameter_track->data[ii];
-  }
+  // Copy over sampling mat
+  GSLMAT_TO_REALSXP(theta_matrix, w->parameter_track);
 
   // Clean up
   TimeSeries_free(X);
