@@ -144,22 +144,15 @@ int blsp_sampler(TimeSeries_t *X, const gsl_vector *theta_mu,
 
       gsl_vector_view current_th = gsl_matrix_row(w->theta_hat, year);
 
-      gsl_matrix_set(w->parameter_track, year + (iter * w->nyrs), 0, iter);
-      gsl_matrix_set(w->parameter_track, year + (iter * w->nyrs), 1, year);
+	  // TODO: This could be more efficient
+	  size_t idx = iter + (year * w->niter);
+      gsl_matrix_set(w->parameter_track, idx, 1, iter);
+      gsl_matrix_set(w->parameter_track, idx, 0, year);
       for (size_t i = 0; i < 7; ++i) {
-        gsl_matrix_set(w->parameter_track, year + (iter * w->nyrs), i + 2,
+        gsl_matrix_set(w->parameter_track, idx, i + 2,
                        gsl_vector_get(&current_th.vector, i));
       }
 
-      /* gsl_matrix_set_row(w->parameter_track, year + (iter * w->nyrs), */
-      /*                    &current_th.vector); */
-
-      /* 	gsl_matrix_set_row(w->parameter_track, iter + (year * w->niter),
-       * &current_th.vector); */
-
-      /* gsl_matrix_set_row(parameter_tracker, year + (iter * TS_Data->n_years),
-       */
-      /*                    &current_th.vector); */
     } // End year loop
 
     // **** GIBBS *************************************************************
