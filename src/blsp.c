@@ -5,7 +5,6 @@
 #include "workspace.h"
 #include <stdio.h>
 
-
 #define matrix_incr(X, i, j, y)                                                \
   gsl_matrix_set(X, i, j, gsl_matrix_get(X, i, j) + y);
 
@@ -28,7 +27,6 @@ int blsp_sampler(TimeSeries_t *X, const gsl_vector *theta_mu,
   RNG_t = gsl_rng_taus;
   RNG_ptr = gsl_rng_alloc(RNG_t);
   gsl_rng_set(RNG_ptr, 1);
-
 
   // INITIAL LOG LIKELIHOOD
   // Initialize empty (zeroed) vector to hold log likelihoods
@@ -61,7 +59,6 @@ int blsp_sampler(TimeSeries_t *X, const gsl_vector *theta_mu,
   /*   gsl_matrix_set_row(w->mh_mat, j, w->theta_sd_vec); */
   /* } */
   gsl_matrix_scale(w->mh_mat, 5.0);
-
 
   /* theta_hat_candidate_vector = */
   /*     gsl_vector_calloc(PARAMETER_COUNT); // Candidate vector */
@@ -144,8 +141,8 @@ int blsp_sampler(TimeSeries_t *X, const gsl_vector *theta_mu,
 
       gsl_vector_view current_th = gsl_matrix_row(w->theta_hat, year);
 
-	  // TODO: This could be more efficient
-	  size_t idx = iter + (year * w->niter);
+      // TODO: This could be more efficient
+      size_t idx = iter + (year * w->niter);
       gsl_matrix_set(w->parameter_track, idx, 1, iter);
       gsl_matrix_set(w->parameter_track, idx, 0, year);
       for (size_t i = 0; i < 7; ++i) {
