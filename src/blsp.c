@@ -1,9 +1,4 @@
-#include "blsp_math.h"
-#include "common.h"
-#include "quant_tracker.h"
-#include "timeseries.h"
-#include "workspace.h"
-#include <stdio.h>
+#include "blsp.h"
 
 #define matrix_incr(X, i, j, y)                                                \
   gsl_matrix_set(X, i, j, gsl_matrix_get(X, i, j) + y);

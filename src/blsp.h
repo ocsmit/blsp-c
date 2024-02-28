@@ -1,6 +1,8 @@
 #ifndef SAMPLER_H_
 #define SAMPLER_H_
 
+#include "blsp_math.h"
+#include "quant_tracker.h"
 #include "timeseries.h"
 #include "workspace.h"
 

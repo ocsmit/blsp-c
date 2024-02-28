@@ -1,9 +1,6 @@
 #ifndef BLSP_MATH_H_
 #define BLSP_MATH_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #include "common.h"
 
@@ -26,9 +23,6 @@ double vi_log_likelihood(gsl_vector *vi_vector, gsl_vector *doy_vector,
 			 gsl_vector *param_vector, size_t size, double sigma);
 
 
-#ifdef __cplusplus
-}
-#endif
 
 
 #endif
