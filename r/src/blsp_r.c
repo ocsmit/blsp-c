@@ -58,7 +58,6 @@ SEXP run_blsp(SEXP data_vector, SEXP doy_vector, SEXP year_idx_vector,
 
   gsl_vector_view theta_mu_view = gsl_vector_view_array(theta_mu, 7);
   gsl_vector_view theta_sd_view = gsl_vector_view_array(theta_sd, 7);
-  workspace_init_thetas(&theta_mu_view.vector, &theta_sd_view.vector, w);
 
   int status = blsp_sampler(X, &theta_mu_view.vector, &theta_sd_view.vector, w);
 

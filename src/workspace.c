@@ -175,7 +175,7 @@ void fill_matrix_by_row(gsl_matrix *m, gsl_vector *x) {
     gsl_matrix_set_row(m, i, x);
 }
 
-void workspace_init_thetas(gsl_vector *mu, gsl_vector *sd, blsp_workspace *w) {
+void workspace_init_thetas(const gsl_vector *mu, const gsl_vector *sd, blsp_workspace *w) {
   gsl_vector_memcpy(w->theta_mu_vec, mu);
   gsl_vector_memcpy(w->theta_sd_vec, sd);
   fill_matrix_by_row(w->theta_hat, w->theta_mu_vec);

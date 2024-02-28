@@ -98,7 +98,6 @@ int main(int argc, char const *argv[]) {
 
 
   blsp_workspace *w = blsp_workspace_sampler_alloc(num_obs, num_years, 2000, 7000, 7);
-  workspace_init_thetas(theta_mean_view, theta_sd_view, w);
 
   blsp_sampler(X, theta_mean_view, theta_sd_view, w);
 

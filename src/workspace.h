@@ -69,7 +69,7 @@ blsp_workspace *blsp_workspace_sampler_alloc(const size_t nobs,
  *
  * @return     void
  */
-void workspace_init_thetas(gsl_vector *mu, gsl_vector *sd, blsp_workspace *w);
+void workspace_init_thetas(const gsl_vector *mu, const gsl_vector *sd, blsp_workspace *w);
 
 
 /**

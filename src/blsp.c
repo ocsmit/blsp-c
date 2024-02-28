@@ -11,6 +11,9 @@
 int blsp_sampler(TimeSeries_t *X, const gsl_vector *theta_mu,
                  const gsl_vector *theta_sd, blsp_workspace *w) {
 
+  // Initialize thetas in workspace
+  workspace_init_thetas(theta_mu, theta_sd, w);
+
   double theta_prior_m = 0.1; /* strength of priors */
   double theta_prior_w =
       w->nyrs / (w->nyrs + theta_prior_m); /* coeff for post Create */
