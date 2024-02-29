@@ -168,6 +168,11 @@ void blsp_free_workspace(blsp_workspace *w) {
   free(w);
 }
 
+gsl_matrix *blsp_workspace_samples(blsp_workspace *w) {
+  return w->parameter_track;
+}
+
+
 void fill_matrix_by_row(gsl_matrix *m, gsl_vector *x) {
   size_t nrow;
   nrow = m->size1;

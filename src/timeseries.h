@@ -137,4 +137,8 @@ double TimeSeries_obs(TimeSeries_t *TSData, size_t i);
  */
 TimeSeries_slice TimeSeries_obs_year(TimeSeries_t *BLSP_Data, size_t year_idx);
 
+void TimeSeries_set_data(TimeSeries_t *TSData, gsl_vector *data);
+void TimeSeries_set_time(TimeSeries_t *TSData, gsl_vector *data);
+void TimeSeries_set_tidx(TimeSeries_t *TSData, gsl_vector *data);
+
 #endif // !TIMESERIES_H_

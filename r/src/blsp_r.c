@@ -2,13 +2,16 @@
 #include <Rdefines.h>
 #include <Rinternals.h>
 #include <stdio.h>
+#include <libblsp.h>
 
 #include "blsp_r.h"
 
-#include "../../src/blsp.h"
-#include "../../src/timeseries.h"
-#include "../../src/workspace.h"
-#include "R_ext/Print.h"
+//#include "../../src/blsp.h"
+//#include "../../src/timeseries.h"
+//#include "../../src/workspace.h"
+//#include "../../include/libblsp.h"
+#include <gsl/gsl_vector.h>
+#include <R_ext/Print.h>
 
 #define GSL_TO_REALSXP(dst, src, size)                                         \
   memcpy(REAL(dst), src, sizeof(double) * size);
@@ -42,13 +45,14 @@ SEXP run_blsp(SEXP data_vector, SEXP doy_vector, SEXP year_idx_vector,
   TimeSeries_t *X = TimeSeries_alloc(nyrs, nobs);
 
   gsl_vector_view data_view = gsl_vector_view_array(data_vec, nobs);
-  gsl_vector_memcpy(X->data, &data_view.vector);
+  TimeSeries_set_data(X, &data_view.vector);
 
   gsl_vector_view doy_view = gsl_vector_view_array(doy_vec, nobs);
-  gsl_vector_memcpy(X->time, &doy_view.vector);
+  TimeSeries_set_time(X, &doy_view.vector);
 
   gsl_vector_view idx_view = gsl_vector_view_array(year_idx_vec, nyrs + 1);
-  gsl_vector_memcpy(X->tidx, &idx_view.vector);
+  TimeSeries_set_tidx(X, &idx_view.vector);
+
 
   // This instead uses pointers to the underlying memory passed from R
   /// TimeSeries_t *Xi = TimeSeries_init(nyrs, nobs, &data_view.vector,
@@ -62,7 +66,7 @@ SEXP run_blsp(SEXP data_vector, SEXP doy_vector, SEXP year_idx_vector,
   int status = blsp_sampler(X, &theta_mu_view.vector, &theta_sd_view.vector, w);
 
   // Copy over sampling mat
-  GSLMAT_TO_REALSXP(theta_matrix, w->parameter_track);
+  GSLMAT_TO_REALSXP(theta_matrix, blsp_workspace_samples(w));
 
   // Clean up
   TimeSeries_free(X);

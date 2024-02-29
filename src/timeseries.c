@@ -47,6 +47,19 @@ void TimeSeries_free(TimeSeries_t *TSData) {
   free(TSData);
 }
 
+
+void TimeSeries_set_data(TimeSeries_t *TSData, gsl_vector *data) {
+  gsl_vector_memcpy(TSData->data, data);
+}
+void TimeSeries_set_time(TimeSeries_t *TSData, gsl_vector *data)
+{
+  gsl_vector_memcpy(TSData->time, data);
+}
+void TimeSeries_set_tidx(TimeSeries_t *TSData, gsl_vector *data)
+{
+  gsl_vector_memcpy(TSData->tidx, data);
+}
+
 unsigned int TimeSeries_year(TimeSeries_t *TSData, size_t i) {
   return gsl_vector_get(TSData->tidx, i);
 }

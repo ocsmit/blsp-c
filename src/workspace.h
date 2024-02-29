@@ -57,6 +57,8 @@ blsp_workspace *blsp_workspace_sampler_alloc(const size_t nobs,
 #define blsp_workspace_alloc(nobs, nyrs, nburn, niter)                         \
   blsp_workspace_sampler_alloc(nobs, nyrs, nburn, niter, PARAMETER_COUNT)
 
+gsl_matrix *blsp_workspace_samples(blsp_workspace *w);
+
 /**
  * @brief      initialize sampling grids
  *
