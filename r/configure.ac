@@ -1,5 +1,7 @@
 AC_INIT([blspR], [0.0.1])
 
+
+
 ## Use gsl-config to find arguments for compiler and linker flags
 ##
 ## Check for non-standard programs: gsl-config(1)
@@ -12,6 +14,15 @@ if test "${GSL_CONFIG}" != ""; then
 else
     AC_MSG_ERROR([gsl-config not found, is GSL installed?])
 fi
+
+
+dnl AC_SEARCH_LIBS([TimeSeries_alloc], [blsp],
+
+
+dnl ], [
+dnl   AC_MSG_ERROR([unable to find lib blsp])
+dnl ])
+
 
 # Now substitute these variables in src/Makevars.in to create src/Makevars
 AC_SUBST(GSL_CFLAGS)
