@@ -65,17 +65,20 @@ int main(int argc, char const *argv[]) {
   gsl_vector *yr_id_vector = gsl_vector_alloc(num_years);
 
   // Read in test data. GLS will throw error if file not found
-  FILE *file_doy = fopen("./data/doy_full.dat", "r");
+  //FILE *file_doy = fopen("./data/doy_full.dat", "r");
+  FILE *file_doy = fopen(argv[1], "r");
   check_file(file_doy);
   gsl_vector_fscanf(file_doy, doy_vector);
   fclose(file_doy);
 
-  FILE *file_y = fopen("./data/y_full.dat", "r");
+  //FILE *file_y = fopen("./data/y_full.dat", "r");
+  FILE *file_y = fopen(argv[2], "r");
   check_file(file_y);
   gsl_vector_fscanf(file_y, y_vector);
   fclose(file_y);
 
-  FILE *file_yr_id = fopen("./data/year_idx.dat", "r");
+  //FILE *file_yr_id = fopen("./data/year_idx.dat", "r");
+  FILE *file_yr_id = fopen(argv[3], "r");
   check_file(file_yr_id);
   gsl_vector_fscanf(file_y, yr_id_vector);
   fclose(file_yr_id);
