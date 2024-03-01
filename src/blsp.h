@@ -18,7 +18,7 @@
  *
  * @return     int
  */
-int blsp_sampler(TimeSeries_t *X, const gsl_vector *theta_mu,
-                 const gsl_vector *theta_sd, blsp_workspace *w);
+int blsp_sampler(BLSP_TimeSeries *X, const gsl_vector *theta_mu,
+                 const gsl_vector *theta_sd, BLSP_Workspace *w);
 
 #endif

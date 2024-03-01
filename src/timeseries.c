@@ -5,8 +5,8 @@
 
 #include "timeseries.h"
 
-TimeSeries_t *TimeSeries_alloc(size_t n_years, size_t n_obs) {
-  TimeSeries_t *TSData = malloc(sizeof(TimeSeries_t));
+BLSP_TimeSeries *BLSP_TimeSeries_alloc(size_t n_years, size_t n_obs) {
+  BLSP_TimeSeries *TSData = malloc(sizeof(BLSP_TimeSeries));
   if (TSData == NULL) {
     printf("Couldn't allocate memory for BLSP_Data\n");
     exit(EXIT_FAILURE);
@@ -23,9 +23,9 @@ TimeSeries_t *TimeSeries_alloc(size_t n_years, size_t n_obs) {
   return TSData;
 }
 
-TimeSeries_t *TimeSeries_init(size_t n_years, size_t n_obs, gsl_vector *obs,
+BLSP_TimeSeries *BLSP_TimeSeries_init(size_t n_years, size_t n_obs, gsl_vector *obs,
                               gsl_vector *doy, gsl_vector *year_idx_vec) {
-  TimeSeries_t *TSData = malloc(sizeof(TimeSeries_t));
+  BLSP_TimeSeries *TSData = malloc(sizeof(BLSP_TimeSeries));
   if (TSData == NULL) {
     printf("Couldn't allocate memory for BLSP_Data\n");
     exit(EXIT_FAILURE);
@@ -40,7 +40,7 @@ TimeSeries_t *TimeSeries_init(size_t n_years, size_t n_obs, gsl_vector *obs,
   return TSData;
 }
 
-void TimeSeries_free(TimeSeries_t *TSData) {
+void BLSP_TimeSeries_free(BLSP_TimeSeries *TSData) {
   free(TSData->data);
   free(TSData->time);
   free(TSData->tidx);
@@ -48,50 +48,50 @@ void TimeSeries_free(TimeSeries_t *TSData) {
 }
 
 
-void TimeSeries_set_data(TimeSeries_t *TSData, gsl_vector *data) {
+void BLSP_TimeSeries_set_data(BLSP_TimeSeries *TSData, gsl_vector *data) {
   gsl_vector_memcpy(TSData->data, data);
 }
-void TimeSeries_set_time(TimeSeries_t *TSData, gsl_vector *data)
+void BLSP_TimeSeries_set_time(BLSP_TimeSeries *TSData, gsl_vector *data)
 {
   gsl_vector_memcpy(TSData->time, data);
 }
-void TimeSeries_set_tidx(TimeSeries_t *TSData, gsl_vector *data)
+void BLSP_TimeSeries_set_tidx(BLSP_TimeSeries *TSData, gsl_vector *data)
 {
   gsl_vector_memcpy(TSData->tidx, data);
 }
 
-unsigned int TimeSeries_year(TimeSeries_t *TSData, size_t i) {
+unsigned int BLSP_TimeSeries_year(BLSP_TimeSeries *TSData, size_t i) {
   return gsl_vector_get(TSData->tidx, i);
 }
 
-double TimeSeries_doy(TimeSeries_t *TSData, size_t i) {
+double BLSP_TimeSeries_doy(BLSP_TimeSeries *TSData, size_t i) {
   return gsl_vector_get(TSData->time, i);
 }
 
-gsl_vector_view TimeSeries_doy_year(TimeSeries_t *TSData, size_t year_idx) {
+gsl_vector_view BLSP_TimeSeries_doy_year(BLSP_TimeSeries *TSData, size_t year_idx) {
   size_t idx_s, idx_e;
 
   if (year_idx > (TSData->nidx) - 1)
     exit(EXIT_FAILURE); // TODO: Add message
 
-  idx_s = TimeSeries_year(TSData, year_idx);
-  idx_e = TimeSeries_year(TSData, year_idx + 1);
+  idx_s = BLSP_TimeSeries_year(TSData, year_idx);
+  idx_e = BLSP_TimeSeries_year(TSData, year_idx + 1);
 
   return gsl_vector_subvector(TSData->time, idx_s, idx_e - idx_s);
 }
 
-double TimeSeries_obs(TimeSeries_t *TSData, size_t i) {
+double BLSP_TimeSeries_obs(BLSP_TimeSeries *TSData, size_t i) {
   return gsl_vector_get(TSData->data, i);
 }
 
-gsl_vector_view TimeSeries_obs_year(TimeSeries_t *TSData, size_t year_idx) {
+gsl_vector_view BLSP_TimeSeries_obs_year(BLSP_TimeSeries *TSData, size_t year_idx) {
   size_t idx_s, idx_e;
 
   if (year_idx > (TSData->nidx) - 1)
     exit(EXIT_FAILURE); // TODO: Add message
 
-  idx_s = TimeSeries_year(TSData, year_idx);
-  idx_e = TimeSeries_year(TSData, year_idx + 1);
+  idx_s = BLSP_TimeSeries_year(TSData, year_idx);
+  idx_e = BLSP_TimeSeries_year(TSData, year_idx + 1);
 
   return gsl_vector_subvector(TSData->data, idx_s, idx_e - idx_s);
 }

@@ -30,7 +30,7 @@ typedef struct {
   double sigma;             /* global variance (noise) */
   size_t niter;             /* number of iterations */
   size_t nburn;             /* number of burnin iterations */
-} blsp_workspace;
+} BLSP_Workspace;
 
 
 
@@ -47,17 +47,17 @@ typedef struct {
  *
  * @return     blsp_workspace
  */
-blsp_workspace *blsp_workspace_sampler_alloc(const size_t nobs,
+BLSP_Workspace *BLSP_Workspace_alloc(const size_t nobs,
                                              const size_t nyrs,
                                              const size_t nburn,
                                              const size_t niter,
                                              const size_t npar);
 
 /* FIXME: Does not work why? */
-#define blsp_workspace_alloc(nobs, nyrs, nburn, niter)                         \
-  blsp_workspace_sampler_alloc(nobs, nyrs, nburn, niter, PARAMETER_COUNT)
+/* #define blsp_workspace_alloc(nobs, nyrs, nburn, niter)                         \ */
+/*   BLSP_workspace_sampler_alloc(nobs, nyrs, nburn, niter, PARAMETER_COUNT) */
 
-gsl_matrix *blsp_workspace_samples(blsp_workspace *w);
+gsl_matrix *BLSP_Workspace_samples(BLSP_Workspace *w);
 
 /**
  * @brief      initialize sampling grids
@@ -71,7 +71,7 @@ gsl_matrix *blsp_workspace_samples(blsp_workspace *w);
  *
  * @return     void
  */
-void workspace_init_thetas(const gsl_vector *mu, const gsl_vector *sd, blsp_workspace *w);
+void BLSP_Workspace_init_thetas(const gsl_vector *mu, const gsl_vector *sd, BLSP_Workspace *w);
 
 
 /**
@@ -83,7 +83,7 @@ void workspace_init_thetas(const gsl_vector *mu, const gsl_vector *sd, blsp_work
  *
  * @return     void
  */
-void blsp_free_workspace(blsp_workspace *w);
+void BLSP_Workspace_free(BLSP_Workspace *w);
 
 /**
  * @brief      Fill gsl_matrix row wise

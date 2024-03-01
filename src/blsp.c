@@ -8,11 +8,11 @@
 
 #define matrix_reset_val(X, i, j) gsl_matrix_set(X, i, j, 0.1);
 
-int blsp_sampler(TimeSeries_t *X, const gsl_vector *theta_mu,
-                 const gsl_vector *theta_sd, blsp_workspace *w) {
+int blsp_sampler(BLSP_TimeSeries *X, const gsl_vector *theta_mu,
+                 const gsl_vector *theta_sd, BLSP_Workspace *w) {
 
   // Initialize thetas in workspace
-  workspace_init_thetas(theta_mu, theta_sd, w);
+  BLSP_Workspace_init_thetas(theta_mu, theta_sd, w);
 
   double theta_prior_m = 0.1; /* strength of priors */
   double theta_prior_w =
@@ -36,8 +36,8 @@ int blsp_sampler(TimeSeries_t *X, const gsl_vector *theta_mu,
 
     /* size_t idx_s = TimeSeries_year(X, year); */
     /* size_t idx_e = TimeSeries_year(X, year + 1); */
-    gsl_vector_view year_i_obs = TimeSeries_obs_year(X, year);
-    gsl_vector_view year_i_doy = TimeSeries_doy_year(X, year);
+    gsl_vector_view year_i_obs = BLSP_TimeSeries_obs_year(X, year);
+    gsl_vector_view year_i_doy = BLSP_TimeSeries_doy_year(X, year);
 
     // Get parameter vector for year i
     gsl_vector_view curr_theta_hat = gsl_matrix_row(w->theta_hat, year);
@@ -65,8 +65,8 @@ int blsp_sampler(TimeSeries_t *X, const gsl_vector *theta_mu,
     for (size_t year = 0; year < w->nyrs; ++year) {
 
       // Create vector views for the data in the current year
-      gsl_vector_view year_i_obs = TimeSeries_obs_year(X, year);
-      gsl_vector_view year_i_doy = TimeSeries_doy_year(X, year);
+      gsl_vector_view year_i_obs = BLSP_TimeSeries_obs_year(X, year);
+      gsl_vector_view year_i_doy = BLSP_TimeSeries_doy_year(X, year);
       gsl_vector_view theta_hat_year = gsl_matrix_row(w->theta_hat, year);
 
       for (size_t param = 0; param < PARAMETER_COUNT; ++param) {
@@ -222,8 +222,8 @@ int blsp_sampler(TimeSeries_t *X, const gsl_vector *theta_mu,
       // 1. Calculate VI SSE for each year and add to SSE
 
       // Get value vectors for year i
-      gsl_vector_view year_i_obs = TimeSeries_obs_year(X, year);
-      gsl_vector_view year_i_doy = TimeSeries_doy_year(X, year);
+      gsl_vector_view year_i_obs = BLSP_TimeSeries_obs_year(X, year);
+      gsl_vector_view year_i_doy = BLSP_TimeSeries_doy_year(X, year);
 
       // We use the scale vector as a temporary place to memcpy our parameter
       // vector for year i
