@@ -38,7 +38,7 @@ extern void BLSP_TimeSeries_set_time(BLSP_TimeSeries *TSData, gsl_vector *data);
 extern void BLSP_TimeSeries_set_tidx(BLSP_TimeSeries *TSData, gsl_vector *data);
 
 
-extern int blsp_sampler(BLSP_TimeSeries *X, const gsl_vector *theta_mu,
+extern int BLSP_sampler(BLSP_TimeSeries *X, const gsl_vector *theta_mu,
                  const gsl_vector *theta_sd, BLSP_Workspace *w);
 
 #endif // !LIBBLSP_H_
