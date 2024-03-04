@@ -14,24 +14,15 @@ if test "${GSL_CONFIG}" != ""; then
 else
     AC_MSG_ERROR([gsl-config not found, is GSL installed?])
 fi
-
-
-AC_CHECK_HEADER([libblsp.h])
-
-
-AC_SEARCH_LIBS([BLSP_sampler], [blsp], [], [
-    AC_MSG_ERROR([BLSP_sampler not found, is blsp installed?])
-])
-
-
-dnl ], [
-dnl   AC_MSG_ERROR([unable to find lib blsp])
-dnl ])
-
-
-# Now substitute these variables in src/Makevars.in to create src/Makevars
 AC_SUBST(GSL_CFLAGS)
 AC_SUBST(GSL_LIBS)
+
+AC_CHECK_HEADER([libblsp.h])
+AC_SEARCH_LIBS([BLSP_sampler], [blsp], [BLSP_LIBS="-lblsp"], [
+    AC_MSG_ERROR([BLSP_sampler not found, is blsp installed?])
+])
+AC_SUBST(BLSP_LIBS)
+
 
 AC_CONFIG_FILES([src/Makevars])
 AC_OUTPUT

@@ -1,13 +1,12 @@
 # set by configure
 GSL_CFLAGS = @GSL_CFLAGS@
 GSL_LIBS   = @GSL_LIBS@
+BLSP_LIBS  = @BLSP_LIBS@
 
 # combine with standard arguments for R
-PKG_CPPFLAGS = $(GSL_CFLAGS) #-I/usr/local/include #-I../inst/c
-PKG_LIBS = $(GSL_LIBS) #-L/usr/local/lib -lblsp
+PKG_CPPFLAGS = $(GSL_CFLAGS)
+PKG_LIBS = $(GSL_LIBS) $(BLSP_LIBS)
 
-#OBJECTS =$(SOURCES_CPP:.cpp=.o)  $(SOURCES_C:.c=.o)
-#SOURCES=$(wildcard ../../src/**/*.c ../../src/*.c ./*.c)
 SOURCES=$(wildcard ./*.c)
 OBJECTS=$(patsubst %.c, %.o, $(SOURCES)) # list *.c -> *.o
 
