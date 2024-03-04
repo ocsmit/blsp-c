@@ -8,8 +8,8 @@
 
 #define matrix_reset_val(X, i, j) gsl_matrix_set(X, i, j, 0.1);
 
-int BLSP_sampler(BLSP_TimeSeries *X, const gsl_vector *theta_mu,
-                 const gsl_vector *theta_sd, BLSP_Workspace *w) {
+int BLSP_sampler(BLSP_TimeSeries_T *X, const gsl_vector *theta_mu,
+                 const gsl_vector *theta_sd, BLSP_Workspace_T *w) {
 
   // Initialize thetas in workspace
   BLSP_Workspace_init_thetas(theta_mu, theta_sd, w);

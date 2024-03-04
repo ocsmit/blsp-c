@@ -16,7 +16,12 @@ else
 fi
 
 
-dnl AC_SEARCH_LIBS([TimeSeries_alloc], [blsp],
+AC_CHECK_HEADER([libblsp.h])
+
+
+AC_SEARCH_LIBS([BLSP_sampler], [blsp], [], [
+    AC_MSG_ERROR([BLSP_sampler not found, is blsp installed?])
+])
 
 
 dnl ], [

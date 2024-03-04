@@ -83,7 +83,7 @@ int main(int argc, char const *argv[]) {
   gsl_vector_fscanf(file_y, yr_id_vector);
   fclose(file_yr_id);
 
-  TimeSeries_t *X = TimeSeries_alloc(num_years, num_obs);
+  BLSP_TimeSeries_T *X = BLSP_TimeSeries_alloc(num_years, num_obs);
 
   gsl_vector_memcpy(X->data, y_vector);
   gsl_vector_memcpy(X->time, doy_vector);
@@ -103,12 +103,12 @@ int main(int argc, char const *argv[]) {
   /// TimeSeries_t *Xi = TimeSeries_init(nyrs, nobs, &data_view.vector,
   /// &doy_view.vector, &yr_idx_view.vector);
 
-  blsp_workspace *w =
-      blsp_workspace_sampler_alloc(num_obs, num_years, 2000, 7000, 7);
+  BLSP_Workspace_T *w =
+      BLSP_Workspace_alloc(num_obs, num_years, 2000, 7000, 7);
 
-  blsp_sampler(X, theta_mean_view, theta_sd_view, w);
+  BLSP_sampler(X, theta_mean_view, theta_sd_view, w);
 
-  TimeSeries_free(X);
+  BLSP_TimeSeries_free(X);
   gsl_vector_free(theta_mean_view);
   gsl_vector_free(theta_sd_view);
   printf("Done!\n");

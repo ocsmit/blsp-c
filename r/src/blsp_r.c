@@ -36,7 +36,7 @@ SEXP run_blsp(SEXP data_vector, SEXP doy_vector, SEXP year_idx_vector,
   // we have enough memory for it to fit, but I could instead initialize it by
   // assigning the vector views since we know that the data already fits in
   // memory since we passing it from R
-  TimeSeries_t *X = BLSP_TimeSeries_alloc(nyrs, nobs);
+  BLSP_TimeSeries_T *X = BLSP_TimeSeries_alloc(nyrs, nobs);
 
   gsl_vector_view data_view = gsl_vector_view_array(data_vec, nobs);
   BLSP_TimeSeries_set_data(X, &data_view.vector);
@@ -52,7 +52,7 @@ SEXP run_blsp(SEXP data_vector, SEXP doy_vector, SEXP year_idx_vector,
   /// TimeSeries_t *Xi = TimeSeries_init(nyrs, nobs, &data_view.vector,
   /// &doy_view.vector, &yr_idx_view.vector);
 
-  blsp_workspace *w = BLSP_Workspace_alloc(nobs, nyrs, nburn, niter, 7);
+  BLSP_Workspace_T *w = BLSP_Workspace_alloc(nobs, nyrs, nburn, niter, 7);
 
   gsl_vector_view theta_mu_view = gsl_vector_view_array(theta_mu, 7);
   gsl_vector_view theta_sd_view = gsl_vector_view_array(theta_sd, 7);

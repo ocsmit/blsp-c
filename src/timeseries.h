@@ -7,8 +7,6 @@
 
 #include "common.h"
 
-#define TimeSeries_slice gsl_vector_view
-
 /**
  * @struct TimeSeries_t
  * Struct providing interface to timeseries data indexed by year
@@ -34,19 +32,19 @@
  *
 
  */
-typedef struct TimeSeries {
+typedef struct {
   size_t nidx;      /* Total number of years */
   size_t nobs;      /* total number of observations */
   gsl_vector *data; /* GSL vector holding signal data */
   gsl_vector *time; /* GLS vector holding time for each observation */
   gsl_vector *tidx; /* GSL vector holding idx for time*/
-} BLSP_TimeSeries;
+} BLSP_TimeSeries_T;
 
 /* TODO: Implement view/slice mechanism for timeseries */
-typedef struct TimeSeries_Slice {
-  gsl_vector_view *data;
-  gsl_vector_view *time;
-} BLSP_TimeSeries_Slice;
+/* typedef struct TimeSeries_Slice { */
+/*   gsl_vector_view *data; */
+/*   gsl_vector_view *time; */
+/* } BLSP_TimeSeries_Slice; */
 
 /**
  * @brief      TimeSeries_alloc
@@ -58,7 +56,7 @@ typedef struct TimeSeries_Slice {
  *
  * @return     *TimeSeries_t
  */
-BLSP_TimeSeries *BLSP_TimeSeries_alloc(size_t n_years, size_t n_obs);
+BLSP_TimeSeries_T *BLSP_TimeSeries_alloc(size_t n_years, size_t n_obs);
 
 /**
  * @brief      Frees TimeSeries_t memory
@@ -70,11 +68,12 @@ BLSP_TimeSeries *BLSP_TimeSeries_alloc(size_t n_years, size_t n_obs);
  *
  * @return     void
  */
-void BLSP_TimeSeries_free(BLSP_TimeSeries *TSData);
+void BLSP_TimeSeries_free(BLSP_TimeSeries_T *TSData);
 
 /* FIXME: segfaults when used with R interface */
-BLSP_TimeSeries *BLSP_TimeSeries_init(size_t n_years, size_t n_obs, gsl_vector *obs,
-                              gsl_vector *doy, gsl_vector *year_idx_vec);
+BLSP_TimeSeries_T *BLSP_TimeSeries_init(size_t n_years, size_t n_obs,
+                                        gsl_vector *obs, gsl_vector *doy,
+                                        gsl_vector *year_idx_vec);
 
 /**
  * @brief      Get tidx value
@@ -86,7 +85,7 @@ BLSP_TimeSeries *BLSP_TimeSeries_init(size_t n_years, size_t n_obs, gsl_vector *
  *
  * @return     unsigned int
  */
-unsigned int BLSP_TimeSeries_year(BLSP_TimeSeries *TSData, size_t i);
+unsigned int BLSP_TimeSeries_year(BLSP_TimeSeries_T *TSData, size_t i);
 
 /**
  * @brief      get time value
@@ -98,7 +97,7 @@ unsigned int BLSP_TimeSeries_year(BLSP_TimeSeries *TSData, size_t i);
  *
  * @return     return type
  */
-double BLSP_TimeSeries_doy(BLSP_TimeSeries *TSData, size_t i);
+double BLSP_TimeSeries_doy(BLSP_TimeSeries_T *TSData, size_t i);
 
 /**
  * @brief      Subset by index
@@ -110,7 +109,7 @@ double BLSP_TimeSeries_doy(BLSP_TimeSeries *TSData, size_t i);
  *
  * @return     return type
  */
-TimeSeries_slice BLSP_TimeSeries_doy_year(BLSP_TimeSeries *TSData, size_t tidx);
+gsl_vector_view BLSP_TimeSeries_doy_year(BLSP_TimeSeries_T *TSData, size_t tidx);
 
 /**
  * @brief      get obs value
@@ -122,8 +121,7 @@ TimeSeries_slice BLSP_TimeSeries_doy_year(BLSP_TimeSeries *TSData, size_t tidx);
  *
  * @return     return type
  */
-double BLSP_TimeSeries_obs(BLSP_TimeSeries *TSData, size_t i);
-
+double BLSP_TimeSeries_obs(BLSP_TimeSeries_T *TSData, size_t i);
 
 /**
  * @brief      Subset by index
@@ -135,10 +133,11 @@ double BLSP_TimeSeries_obs(BLSP_TimeSeries *TSData, size_t i);
  *
  * @return     return type
  */
-TimeSeries_slice BLSP_TimeSeries_obs_year(BLSP_TimeSeries *BLSP_Data, size_t year_idx);
+gsl_vector_view BLSP_TimeSeries_obs_year(BLSP_TimeSeries_T *BLSP_Data,
+                                     size_t year_idx);
 
-void BLSP_TimeSeries_set_data(BLSP_TimeSeries *TSData, gsl_vector *data);
-void BLSP_TimeSeries_set_time(BLSP_TimeSeries *TSData, gsl_vector *data);
-void BLSP_TimeSeries_set_tidx(BLSP_TimeSeries *TSData, gsl_vector *data);
+void BLSP_TimeSeries_set_data(BLSP_TimeSeries_T *TSData, gsl_vector *data);
+void BLSP_TimeSeries_set_time(BLSP_TimeSeries_T *TSData, gsl_vector *data);
+void BLSP_TimeSeries_set_tidx(BLSP_TimeSeries_T *TSData, gsl_vector *data);
 
 #endif // !TIMESERIES_H_

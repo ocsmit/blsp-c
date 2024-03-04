@@ -1,10 +1,8 @@
 #include "workspace.h"
 
-BLSP_Workspace *BLSP_Workspace_alloc(const size_t nobs,
-                                             const size_t nyrs,
-                                             const size_t nburn,
-                                             const size_t niter,
-                                             const size_t npar) {
+BLSP_Workspace_T *BLSP_Workspace_alloc(const size_t nobs, const size_t nyrs,
+                                       const size_t nburn, const size_t niter,
+                                       const size_t npar) {
 
   // Parameter checking
   if (niter <= nburn) {
@@ -23,9 +21,9 @@ BLSP_Workspace *BLSP_Workspace_alloc(const size_t nobs,
   //       gsl_block structure. That would drastically reduce the number of
   //       memory allocs needed and would allow the workspace to be freed
   //       just by freeing the underlying memory block (at least I think)
-  BLSP_Workspace *w;
+  BLSP_Workspace_T *w;
 
-  w = calloc(1, sizeof(BLSP_Workspace));
+  w = calloc(1, sizeof(BLSP_Workspace_T));
 
   if (w == 0) {
     GSL_ERROR_VAL("failed to allocate space for blsp struct", GSL_ENOMEM, 0);
@@ -128,7 +126,7 @@ BLSP_Workspace *BLSP_Workspace_alloc(const size_t nobs,
   return w;
 }
 
-void BLSP_Workspace_free(BLSP_Workspace *w) {
+void BLSP_Workspace_free(BLSP_Workspace_T *w) {
 
   RETURN_IF_NULL(w);
 
@@ -168,10 +166,9 @@ void BLSP_Workspace_free(BLSP_Workspace *w) {
   free(w);
 }
 
-gsl_matrix *BLSP_Workspace_samples(BLSP_Workspace *w) {
+gsl_matrix *BLSP_Workspace_samples(BLSP_Workspace_T *w) {
   return w->parameter_track;
 }
-
 
 void fill_matrix_by_row(gsl_matrix *m, gsl_vector *x) {
   size_t nrow;
@@ -180,7 +177,8 @@ void fill_matrix_by_row(gsl_matrix *m, gsl_vector *x) {
     gsl_matrix_set_row(m, i, x);
 }
 
-void BLSP_Workspace_init_thetas(const gsl_vector *mu, const gsl_vector *sd, BLSP_Workspace *w) {
+void BLSP_Workspace_init_thetas(const gsl_vector *mu, const gsl_vector *sd,
+                                BLSP_Workspace_T *w) {
   gsl_vector_memcpy(w->theta_mu_vec, mu);
   gsl_vector_memcpy(w->theta_sd_vec, sd);
   fill_matrix_by_row(w->theta_hat, w->theta_mu_vec);
