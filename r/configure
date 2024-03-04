@@ -646,8 +646,7 @@ ac_includes_default="\
 ac_header_c_list=
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
-GSL_LIBS
-GSL_CFLAGS
+BLSP_LIBS
 OBJEXT
 EXEEXT
 ac_ct_CC
@@ -655,6 +654,8 @@ CPPFLAGS
 LDFLAGS
 CFLAGS
 CC
+GSL_LIBS
+GSL_CFLAGS
 GSL_CONFIG
 target_alias
 host_alias
@@ -2280,6 +2281,7 @@ fi
 
 
 
+
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -3302,8 +3304,6 @@ then :
 
 fi
 
-
-
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for library containing BLSP_sampler" >&5
 printf %s "checking for library containing BLSP_sampler... " >&6; }
 if test ${ac_cv_search_BLSP_sampler+y}
@@ -3360,18 +3360,13 @@ ac_res=$ac_cv_search_BLSP_sampler
 if test "$ac_res" != no
 then :
   test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
-
+  BLSP_LIBS="-lblsp"
 else $as_nop
 
     as_fn_error $? "BLSP_sampler not found, is blsp installed?" "$LINENO" 5
 
 fi
 
-
-
-
-
-# Now substitute these variables in src/Makevars.in to create src/Makevars
 
 
 
