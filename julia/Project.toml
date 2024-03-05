@@ -1,0 +1,7 @@
+name = "blsp-jl"
+uuid = "f84ec199-05f1-46d6-8f00-ef7939c52660"
+authors = ["Owen Smith"]
+version = "1.0.0-DEV"
+
+[compat]
+julia = "1.7"
