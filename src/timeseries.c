@@ -5,6 +5,8 @@
 
 #include "timeseries.h"
 
+#define view_to_vec(v) &v.vector
+
 BLSP_TimeSeries_T *BLSP_TimeSeries_alloc(size_t n_years, size_t n_obs) {
   BLSP_TimeSeries_T *TSData = malloc(sizeof(BLSP_TimeSeries_T));
   if (TSData == NULL) {
@@ -23,22 +25,18 @@ BLSP_TimeSeries_T *BLSP_TimeSeries_alloc(size_t n_years, size_t n_obs) {
   return TSData;
 }
 
-BLSP_TimeSeries_T *BLSP_TimeSeries_init(size_t n_years, size_t n_obs,
-                                        gsl_vector *obs, gsl_vector *doy,
-                                        gsl_vector *year_idx_vec) {
-  BLSP_TimeSeries_T *TSData = malloc(sizeof(BLSP_TimeSeries_T));
-  if (TSData == NULL) {
-    printf("Couldn't allocate memory for BLSP_Data\n");
-    exit(EXIT_FAILURE);
-  }
+void BLSP_TimeSeries_init(BLSP_TimeSeries_T *X, double *obs, double *doy,
+                                        double *year_idx_vec) {
 
-  TSData->nidx = n_years;
-  TSData->nobs = n_obs;
+  gsl_vector_view obs_view, doy_view, idx_view;
 
-  TSData->data = obs;
-  TSData->time = doy;
+  obs_view = gsl_vector_view_array(obs, X->nobs);
+  doy_view = gsl_vector_view_array(doy, X->nobs);
+  idx_view = gsl_vector_view_array(year_idx_vec, X->nidx + 1);
 
-  return TSData;
+  gsl_vector_memcpy(X->data, view_to_vec(obs_view));
+  gsl_vector_memcpy(X->time, view_to_vec(doy_view));
+  gsl_vector_memcpy(X->tidx, view_to_vec(idx_view));
 }
 
 void BLSP_TimeSeries_free(BLSP_TimeSeries_T *TSData) {

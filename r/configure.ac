@@ -1,7 +1,5 @@
 AC_INIT([blspR], [0.0.1])
 
-
-
 ## Use gsl-config to find arguments for compiler and linker flags
 ##
 ## Check for non-standard programs: gsl-config(1)
@@ -16,6 +14,7 @@ else
 fi
 AC_SUBST(GSL_CFLAGS)
 AC_SUBST(GSL_LIBS)
+
 
 AC_CHECK_HEADER([libblsp.h])
 AC_SEARCH_LIBS([BLSP_sampler], [blsp], [BLSP_LIBS="-lblsp"], [

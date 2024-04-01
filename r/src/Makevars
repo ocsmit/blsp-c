@@ -1,0 +1,14 @@
+# set by configure
+GSL_CFLAGS   = -I/opt/homebrew/Cellar/gsl/2.7.1/include
+GSL_LIBS     = -L/opt/homebrew/Cellar/gsl/2.7.1/lib -lgsl -lgslcblas
+BLSP_LIBS    = -lblsp
+BLSP_INCLUDE = @BLSP_INCLUDE@
+
+# combine with standard arguments for R
+PKG_CPPFLAGS = $(AM_CFLAGS) $(GSL_CFLAGS)
+PKG_LIBS     = $(AM_LDFLAGS) $(GSL_LIBS) $(BLSP_LIBS)
+
+SOURCES = $(wildcard ./*.c)
+OBJECTS = $(patsubst %.c, %.o, $(SOURCES)) # list *.c -> *.o
+
+#all : $(SHLIB)

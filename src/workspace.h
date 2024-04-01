@@ -30,7 +30,7 @@ typedef struct {
   double sigma;             /* global variance (noise) */
   size_t niter;             /* number of iterations */
   size_t nburn;             /* number of burnin iterations */
-} BLSP_Workspace_T;
+} BLSP_Fit_T;
 
 
 
@@ -47,7 +47,7 @@ typedef struct {
  *
  * @return     blsp_workspace
  */
-BLSP_Workspace_T *BLSP_Workspace_alloc(const size_t nobs,
+BLSP_Fit_T *BLSP_Fit_alloc(const size_t nobs,
                                              const size_t nyrs,
                                              const size_t nburn,
                                              const size_t niter,
@@ -57,7 +57,16 @@ BLSP_Workspace_T *BLSP_Workspace_alloc(const size_t nobs,
 /* #define blsp_workspace_alloc(nobs, nyrs, nburn, niter)                         \ */
 /*   BLSP_workspace_sampler_alloc(nobs, nyrs, nburn, niter, PARAMETER_COUNT) */
 
-gsl_matrix *BLSP_Workspace_samples(BLSP_Workspace_T *w);
+/**
+ * @brief      Get sample matrix
+ *
+ * @details    Returns a gsl_matrix* containing all MCMC samples indexed by year and iteration
+ *
+ * @param      w
+ *
+ * @return     gsl_matrix *
+ */
+gsl_matrix *BLSP_Fit_samples(BLSP_Fit_T *w);
 
 /**
  * @brief      initialize sampling grids
@@ -71,7 +80,7 @@ gsl_matrix *BLSP_Workspace_samples(BLSP_Workspace_T *w);
  *
  * @return     void
  */
-void BLSP_Workspace_init_thetas(const gsl_vector *mu, const gsl_vector *sd, BLSP_Workspace_T *w);
+void BLSP_Fit_init_thetas(const gsl_vector *mu, const gsl_vector *sd, BLSP_Fit_T *w);
 
 
 /**
@@ -83,7 +92,7 @@ void BLSP_Workspace_init_thetas(const gsl_vector *mu, const gsl_vector *sd, BLSP
  *
  * @return     void
  */
-void BLSP_Workspace_free(BLSP_Workspace_T *w);
+void BLSP_Fit_free(BLSP_Fit_T *w);
 
 /**
  * @brief      Fill gsl_matrix row wise

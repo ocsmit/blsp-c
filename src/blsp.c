@@ -1,4 +1,6 @@
 #include "blsp.h"
+#include "timeseries.h"
+#include "workspace.h"
 
 #define matrix_incr(X, i, j, y)                                                \
   gsl_matrix_set(X, i, j, gsl_matrix_get(X, i, j) + y);
@@ -8,11 +10,22 @@
 
 #define matrix_reset_val(X, i, j) gsl_matrix_set(X, i, j, 0.1);
 
-int BLSP_sampler(BLSP_TimeSeries_T *X, const gsl_vector *theta_mu,
-                 const gsl_vector *theta_sd, BLSP_Workspace_T *w) {
+gsl_vector *vector_from_array(unsigned int n, double *x) {
+  gsl_vector *v = gsl_vector_alloc(n);
+  unsigned int i;
+  for (i = 0; i < n; i++)
+    gsl_vector_set(v, i, x[i]);
+  return v;
+}
+
+BLSP_Fit_T *BLSP_sampler(BLSP_TimeSeries_T *X, const gsl_vector *theta_mu,
+                         const gsl_vector *theta_sd, size_t iterations,
+                         size_t burn) { //, BLSP_Workspace_T *w) {
+
+  BLSP_Fit_T *w = BLSP_Fit_alloc(X->nobs, X->nidx, burn, iterations, 7);
 
   // Initialize thetas in workspace
-  BLSP_Workspace_init_thetas(theta_mu, theta_sd, w);
+  BLSP_Fit_init_thetas(theta_mu, theta_sd, w);
 
   double theta_prior_m = 0.1; /* strength of priors */
   double theta_prior_w =
@@ -256,5 +269,27 @@ int BLSP_sampler(BLSP_TimeSeries_T *X, const gsl_vector *theta_mu,
   }
 
   gsl_rng_free(RNG_ptr);
-  return 0;
+  return w;
 }
+
+/* #define gsl_vector_from_array(array, n) gsl_vector_view_array((array), (n)).vector */
+
+
+/* int BLSP_mcmc(double *obs_vec, double *doy_vec, size_t obs_count, size_t *idx_vec, size_t idx_count, */
+/*               double init_theta_mu[7], double init_theta_sd[7], */
+/*               size_t iterations, size_t burn) { */
+
+/*   gsl_vector v; */
+/*   v = gsl_vector_view_array(obs_vec, obs_count).vector; */
+
+/*   gsl_vector vv = gsl_vector_from_array(obs_vec, obs_count); */
+
+/*   BLSP_TimeSeries_T *X = BLSP_TimeSeries_alloc(idx_count, obs_count); */
+/*   X->time = &v; */
+/*   X->time = &vv; */
+
+
+
+
+
+/* }; */

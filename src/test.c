@@ -13,7 +13,7 @@
 void fprint_gslmat(const gsl_matrix *m) {
   for (size_t i = 0; i < m->size1; ++i) {
     for (size_t j = 0; j < m->size2; ++j)
-      fprintf(stderr, "%f ", gsl_matrix_get(m, i, j));
+      fprintf(stderr, "%f\t", gsl_matrix_get(m, i, j));
     fprintf(stderr, "\n");
   }
 }
@@ -103,14 +103,19 @@ int main(int argc, char const *argv[]) {
   /// TimeSeries_t *Xi = TimeSeries_init(nyrs, nobs, &data_view.vector,
   /// &doy_view.vector, &yr_idx_view.vector);
 
-  BLSP_Workspace_T *w =
-      BLSP_Workspace_alloc(num_obs, num_years, 2000, 7000, 7);
+  /* BLSP_Workspace_T *w = */
+  /*     BLSP_Workspace_alloc(num_obs, num_years, 2000, 7000, 7); */
 
-  BLSP_sampler(X, theta_mean_view, theta_sd_view, w);
+  BLSP_Fit_T *fit = BLSP_sampler(X, theta_mean_view, theta_sd_view, 7000, 2000);
+
+
+  print_gslmat(fit->theta_hat);
 
   BLSP_TimeSeries_free(X);
   gsl_vector_free(theta_mean_view);
   gsl_vector_free(theta_sd_view);
+
+
   printf("Done!\n");
   return 0;
 }

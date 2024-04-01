@@ -1,12 +1,19 @@
 Package: blspR
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
-Authors@R:
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-	   comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Type: Package
+Title: blsp
+Version: 0.0.1
+Date: 2022-05-21
+Authors@R: c(
+            person("Owen C.", "Smith", role = c("aut", "cre"),
+                     email = "osmith2@ncsu.com")
+            )
+Author: Owen Smith [aut, cre]
+Maintainer: Owen Smith <osmith2@ncsu.edu>
+Description: Spikefilters
+License: MIT
+Depends: R (>= 3.5.0), methods
+Suggests: tinytest, data.table
+NeedsCompilation: yes
+Repository: CRAN
 Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
