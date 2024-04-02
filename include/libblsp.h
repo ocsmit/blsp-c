@@ -5,6 +5,8 @@
 #include <gsl/gsl_vector.h>
 #include <stdlib.h>
 
+#define PARAMETER_COUNT 7
+
 typedef struct BLSP_TimeSeries_T BLSP_TimeSeries_T;
 /**
  * @struct blsp_workspace
@@ -53,32 +55,6 @@ extern void BLSP_Fit_free(BLSP_Fit_T *w);
  */
 extern gsl_matrix *BLSP_Fit_samples(BLSP_Fit_T *w);
 
-/**
- * @brief      BLSP_TimeSeries_alloc
- *
- * @details    allocates memory for a timeseries struct
- *
- * @param      n_years
- * @param      n_obs
- *
- * @return     *TimeSeries_t
- */
-extern BLSP_TimeSeries_T *BLSP_TimeSeries_alloc(size_t n_years, size_t n_obs);
-
-/**
- * @brief      Frees TimeSeries_t memory
- *
- * @details    Frees memory allocated by TimeSeries_alloc for a TimeSeries_t
- * object
- *
- * @param      TSData
- *
- * @return     void
- */
-extern void BLSP_TimeSeries_free(BLSP_TimeSeries_T *TSData);
-
-extern void BLSP_TimeSeries_init(BLSP_TimeSeries_T *X, double *obs, double *doy,
-                          double *year_idx_vec);
 
 /**
  * @brief      BLSP Algorithm
@@ -97,5 +73,13 @@ extern void BLSP_TimeSeries_init(BLSP_TimeSeries_T *X, double *obs, double *doy,
 BLSP_Fit_T *BLSP_sampler(BLSP_TimeSeries_T *X, const gsl_vector *theta_mu,
                          const gsl_vector *theta_sd, size_t iterations,
                          size_t burn);
+
+
+
+BLSP_Fit_T *BLSP_Fit_sample(double *obs_vec, double *doy_vec, size_t obs_count,
+                            size_t *idx_vec, size_t idx_count,
+                            double init_theta_mu[PARAMETER_COUNT],
+                            double init_theta_sd[PARAMETER_COUNT],
+                            size_t iterations, size_t burn);
 
 #endif // !LIBBLSP_H_

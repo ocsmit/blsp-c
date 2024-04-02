@@ -25,14 +25,14 @@ BLSP_TimeSeries_T *BLSP_TimeSeries_alloc(size_t n_years, size_t n_obs) {
   return TSData;
 }
 
-void BLSP_TimeSeries_init(BLSP_TimeSeries_T *X, double *obs, double *doy,
-                                        double *year_idx_vec) {
+void BLSP_TimeSeries_init(BLSP_TimeSeries_T *X, double *obs_vec, double *doy_vec,
+                          size_t *idx_vec) {
 
   gsl_vector_view obs_view, doy_view, idx_view;
 
-  obs_view = gsl_vector_view_array(obs, X->nobs);
-  doy_view = gsl_vector_view_array(doy, X->nobs);
-  idx_view = gsl_vector_view_array(year_idx_vec, X->nidx + 1);
+  obs_view = gsl_vector_view_array(obs_vec, X->nobs);
+  doy_view = gsl_vector_view_array(doy_vec, X->nobs);
+  idx_view = gsl_vector_view_array((double *)idx_vec, X->nidx + 1);
 
   gsl_vector_memcpy(X->data, view_to_vec(obs_view));
   gsl_vector_memcpy(X->time, view_to_vec(doy_view));

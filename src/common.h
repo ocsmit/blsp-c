@@ -30,4 +30,7 @@
 #define RETURN_IF_NULL(x) if (!x) { return ; }
 
 
+#define view_to_vec(v) &v.vector
+
+
 #endif // !COMMON_H_

@@ -28,21 +28,16 @@ SEXP run_blsp(SEXP data_vector, SEXP doy_vector, SEXP year_idx_vector,
   SEXP theta_matrix;
   PROTECT(theta_matrix = Rf_allocVector(REALSXP, nyrs * niter * 9));
 
-  BLSP_TimeSeries_T *X = BLSP_TimeSeries_alloc(nyrs, nobs);
-  BLSP_TimeSeries_init(X, data_vec, doy_vec, year_idx_vec);
-
-  gsl_vector_view theta_mu_view = gsl_vector_view_array(theta_mu, 7);
-  gsl_vector_view theta_sd_view = gsl_vector_view_array(theta_sd, 7);
-
-  BLSP_Fit_T *fit = BLSP_sampler(X, view_to_vec(theta_mu_view),
-                                 view_to_vec(theta_sd_view), niter, nburn);
+  BLSP_Fit_T *blsp_fit =
+      BLSP_Fit_sample(data_vec, doy_vec, nobs, (size_t *)year_idx_vec, nyrs,
+                      theta_mu, theta_sd, niter, nburn);
 
   // Copy over sampling mat
-  GSLMAT_TO_REALSXP(theta_matrix, BLSP_Fit_samples(fit));
+  GSLMAT_TO_REALSXP(theta_matrix, BLSP_Fit_samples(blsp_fit));
 
   // Clean up
-  BLSP_TimeSeries_free(X);
-  BLSP_Fit_free(fit);
+  // BLSP_TimeSeries_free(X);
+  BLSP_Fit_free(blsp_fit);
 
   // Pop R memory stack
   UNPROTECT(1); // -> theta_matrix

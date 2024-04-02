@@ -43,9 +43,11 @@ BLSP_Fit_T *BLSP_sampler(BLSP_TimeSeries_T *X, const gsl_vector *theta_mu,
                          const gsl_vector *theta_sd, size_t iterations,
                          size_t burn);
 
-int BLSP_mcmc(double *obs_vec, double *doy_vec, size_t obs_count, size_t *idx_vec,
-              size_t idx_count, double init_theta_mu[7],
-              double init_theta_sd[7], size_t iterations, size_t burn);
+BLSP_Fit_T *BLSP_Fit_sample(double *obs_vec, double *doy_vec, size_t obs_count,
+                            size_t *idx_vec, size_t idx_count,
+                            double init_theta_mu[PARAMETER_COUNT],
+                            double init_theta_sd[PARAMETER_COUNT],
+                            size_t iterations, size_t burn);
 // void BLSP_sample(BLSP_Fit_T *X);
 
 #endif

@@ -1,4 +1,5 @@
 #include "blsp.h"
+#include "common.h"
 #include "timeseries.h"
 #include "workspace.h"
 
@@ -47,8 +48,6 @@ BLSP_Fit_T *BLSP_sampler(BLSP_TimeSeries_T *X, const gsl_vector *theta_mu,
 
     // Get value vectors for year i
 
-    /* size_t idx_s = TimeSeries_year(X, year); */
-    /* size_t idx_e = TimeSeries_year(X, year + 1); */
     gsl_vector_view year_i_obs = BLSP_TimeSeries_obs_year(X, year);
     gsl_vector_view year_i_doy = BLSP_TimeSeries_doy_year(X, year);
 
@@ -272,10 +271,32 @@ BLSP_Fit_T *BLSP_sampler(BLSP_TimeSeries_T *X, const gsl_vector *theta_mu,
   return w;
 }
 
-/* #define gsl_vector_from_array(array, n) gsl_vector_view_array((array), (n)).vector */
+/* #define gsl_vector_from_array(array, n) gsl_vector_view_array((array),
+ * (n)).vector */
 
+BLSP_Fit_T *BLSP_Fit_sample(double *obs_vec, double *doy_vec, size_t obs_count,
+                      size_t *idx_vec, size_t idx_count,
+                      double init_theta_mu[PARAMETER_COUNT],
+                      double init_theta_sd[PARAMETER_COUNT], size_t iterations,
+                      size_t burn) {
 
-/* int BLSP_mcmc(double *obs_vec, double *doy_vec, size_t obs_count, size_t *idx_vec, size_t idx_count, */
+  BLSP_TimeSeries_T *X = BLSP_TimeSeries_alloc(idx_count, obs_count);
+  BLSP_TimeSeries_init(X, obs_vec, doy_vec, idx_vec);
+
+  gsl_vector_view theta_mu_view =
+      gsl_vector_view_array(init_theta_mu, PARAMETER_COUNT);
+  gsl_vector_view theta_sd_view =
+      gsl_vector_view_array(init_theta_sd, PARAMETER_COUNT);
+
+  BLSP_Fit_T *fit = BLSP_sampler(X, view_to_vec(theta_mu_view),
+                                 view_to_vec(theta_sd_view), iterations, burn);
+
+  BLSP_TimeSeries_free(X);
+  return fit;
+}
+
+/* int BLSP_mcmc(double *obs_vec, double *doy_vec, size_t obs_count, size_t
+ * *idx_vec, size_t idx_count, */
 /*               double init_theta_mu[7], double init_theta_sd[7], */
 /*               size_t iterations, size_t burn) { */
 
@@ -287,9 +308,5 @@ BLSP_Fit_T *BLSP_sampler(BLSP_TimeSeries_T *X, const gsl_vector *theta_mu,
 /*   BLSP_TimeSeries_T *X = BLSP_TimeSeries_alloc(idx_count, obs_count); */
 /*   X->time = &v; */
 /*   X->time = &vv; */
-
-
-
-
 
 /* }; */

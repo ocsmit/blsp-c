@@ -71,11 +71,8 @@ BLSP_TimeSeries_T *BLSP_TimeSeries_alloc(size_t n_years, size_t n_obs);
 void BLSP_TimeSeries_free(BLSP_TimeSeries_T *TSData);
 
 /* FIXME: segfaults when used with R interface */
-/* BLSP_TimeSeries_T *BLSP_TimeSeries_init(size_t n_years, size_t n_obs, */
-/*                                         gsl_vector *obs, gsl_vector *doy, */
-/*                                         gsl_vector *year_idx_vec); */
-void BLSP_TimeSeries_init(BLSP_TimeSeries_T *X, double *obs, double *doy,
-                          double *year_idx_vec);
+void BLSP_TimeSeries_init(BLSP_TimeSeries_T *X, double *obs_vec, double *doy_vec,
+                          size_t *idx_vec);
 
 /**
  * @brief      Get tidx value
