@@ -3,7 +3,6 @@ load(data_path)
 
 devtools::clean_dll()
 devtools::load_all(reset = T)
-
 theta_mean <- c(
     -1.998392, 0.960355, 120.702350, 9.263498,
     288.853856, 9.166685, -6.592421
@@ -13,5 +12,25 @@ theta_sd <- c(
     1.55979462, 1.20727157, 0.19881890
 )
 
+
 tt <- blspR::blsp_test(y, t, theta_mean, theta_sd)
 print(tt$pheno)
+
+names(tt)
+
+library(blspR)
+
+
+tinytest::test_all()
+
+SimulatedPhenology <- list(
+    "t" = t,
+    "y" = y,
+    "theta_mean" = theta_mean,
+    "theta_sd" = theta_sd,
+    "expected_result" = tt
+)
+
+save(SimulatedPhenology, file = "./data/SimulatedPhenology.rda")
+
+tinytest::test_package("blspR")
