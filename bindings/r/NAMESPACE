@@ -1,0 +1,6 @@
+# Load dynamic libraries (shared object files)
+useDynLib(blspR, .registration = TRUE, .fixes = "C_")
+
+
+# Export functions defined in R code
+export("blsp_test")
